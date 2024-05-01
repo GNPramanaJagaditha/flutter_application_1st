@@ -10,18 +10,18 @@ void main() {
 }
 
 class MobileApp extends StatelessWidget {
-  const MobileApp({Key? key}) : super(key: key);
+  const MobileApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: MobileHomePage(),
     );
   }
 }
 
 class MobileHomePage extends StatelessWidget {
-  const MobileHomePage({Key? key}) : super(key: key);
+  const MobileHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class MobileHomePage extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-           Row(
+           const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
@@ -46,12 +46,12 @@ class MobileHomePage extends StatelessWidget {
               ),
             ],
           ),
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                 width: 325,
-                child: const Text(
+                child: Text(
                   ' for university life.',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
@@ -68,7 +68,7 @@ class MobileHomePage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -79,7 +79,7 @@ class MobileHomePage extends StatelessWidget {
                     ),
                     borderRadius: BorderRadius.circular(25),
                   ),
-                  backgroundColor: Color.fromARGB(191, 18, 159, 253),
+                  backgroundColor: const Color.fromARGB(191, 18, 159, 253),
                 ),
                 child: const Text(
                   'Login',
@@ -97,14 +97,14 @@ class MobileHomePage extends StatelessWidget {
               RichText(
                 text: TextSpan(
                   text: "Don't have an account yet?, ",
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black,
                     fontSize: 14,
                   ),
                   children: [
                     TextSpan(
                       text: "Register Here.",
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
@@ -113,7 +113,7 @@ class MobileHomePage extends StatelessWidget {
                         ..onTap = () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => RegistPage()),
+                            MaterialPageRoute(builder: (context) => const RegistPage()),
                           );
                         },
                     )

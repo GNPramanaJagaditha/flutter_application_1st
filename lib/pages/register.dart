@@ -1,3 +1,5 @@
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_application_1st/pages/login.dart';
@@ -7,7 +9,7 @@ void main() {
 }
 
 class RegistPage extends StatefulWidget {
-  const RegistPage({Key? key}) : super(key: key);
+  const RegistPage({super.key});
 
   @override
   State<RegistPage> createState() => _RegistPageState();
@@ -15,10 +17,10 @@ class RegistPage extends StatefulWidget {
 
 class _RegistPageState extends State<RegistPage> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
 
@@ -31,6 +33,32 @@ class _RegistPageState extends State<RegistPage> {
     super.dispose();
   }
 
+  void goRegist() async {
+    const String apiUrl = "https://mobileapis.manpits.xyz/api";
+
+    final dio = Dio();
+    try {
+      final response = await dio.post("$apiUrl/register", data: {
+        "name": _usernameController.text,
+        "email": _emailController.text,
+        "password": _passwordController.text
+      });
+
+      if (response.statusCode != 200) {
+        throw DioException.connectionTimeout;
+      }
+
+      if (mounted) {
+        Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginPage()), // Navigate to LoginPage
+      );
+      }
+    } on DioException catch (e) {
+      print("Error ${e.response?.statusCode} - ${e.response?.data}");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,20 +69,20 @@ class _RegistPageState extends State<RegistPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                     width: 200,
                     height: 200,
                     child: Image.asset('lib/images/unicompLogo.png'),
                   ),
                 ],
               ),
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
@@ -71,7 +99,7 @@ class _RegistPageState extends State<RegistPage> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               SizedBox(
@@ -82,12 +110,12 @@ class _RegistPageState extends State<RegistPage> {
                     controller: _emailController,
                     decoration: InputDecoration(
                       hintText: 'Enter your email',
-                      fillColor: Color.fromARGB(255, 241, 241, 241),
+                      fillColor: const Color.fromARGB(255, 241, 241, 241),
                       filled: true,
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(25),
-                          borderSide: BorderSide(
-                              color: const Color.fromARGB(255, 255, 255, 255),
+                          borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 255, 255, 255),
                               width: 2)),
                     ),
                     validator: (value) {
@@ -103,7 +131,7 @@ class _RegistPageState extends State<RegistPage> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               SizedBox(
@@ -114,12 +142,12 @@ class _RegistPageState extends State<RegistPage> {
                     controller: _usernameController,
                     decoration: InputDecoration(
                       hintText: 'Enter your username',
-                      fillColor: Color.fromARGB(255, 241, 241, 241),
+                      fillColor: const Color.fromARGB(255, 241, 241, 241),
                       filled: true,
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(25),
-                          borderSide: BorderSide(
-                              color: const Color.fromARGB(255, 255, 255, 255),
+                          borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 255, 255, 255),
                               width: 2)),
                     ),
                       validator: (value) {
@@ -131,7 +159,7 @@ class _RegistPageState extends State<RegistPage> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
                SizedBox(
@@ -143,12 +171,12 @@ class _RegistPageState extends State<RegistPage> {
                     obscureText: !_isPasswordVisible,
                     decoration: InputDecoration(
                       hintText: 'Enter your password',
-                      fillColor: Color.fromARGB(255, 241, 241, 241),
+                      fillColor: const Color.fromARGB(255, 241, 241, 241),
                       filled: true,
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(25),
-                          borderSide: BorderSide(
-                              color: const Color.fromARGB(255, 255, 255, 255),
+                          borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 255, 255, 255),
                               width: 2)),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -175,7 +203,7 @@ class _RegistPageState extends State<RegistPage> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               SizedBox(
@@ -187,12 +215,12 @@ class _RegistPageState extends State<RegistPage> {
                     obscureText: !_isConfirmPasswordVisible,
                     decoration: InputDecoration(
                       hintText: 'Confirm your password',
-                      fillColor: Color.fromARGB(255, 241, 241, 241),
+                      fillColor: const Color.fromARGB(255, 241, 241, 241),
                       filled: true,
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(25),
-                          borderSide: BorderSide(
-                              color: const Color.fromARGB(255, 255, 255, 255),
+                          borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 255, 255, 255),
                               width: 2)),
                     suffixIcon: IconButton(
                         icon: Icon(
@@ -219,7 +247,7 @@ class _RegistPageState extends State<RegistPage> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Row(
@@ -227,11 +255,8 @@ class _RegistPageState extends State<RegistPage> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => LoginPage()),
-                        );
+                      if (_formKey.currentState!.validate()) {    
+                        goRegist();
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -242,7 +267,7 @@ class _RegistPageState extends State<RegistPage> {
                         ),
                         borderRadius: BorderRadius.circular(25),
                       ),
-                      backgroundColor: Color.fromARGB(191, 18, 159, 253),
+                      backgroundColor: const Color.fromARGB(191, 18, 159, 253),
                     ),
                     child: const Text(
                       'Submit',
@@ -251,7 +276,7 @@ class _RegistPageState extends State<RegistPage> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Row(
@@ -260,14 +285,14 @@ class _RegistPageState extends State<RegistPage> {
                   RichText(
                     text: TextSpan(
                       text: "Already Have an Account?, ",
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 14,
                       ),
                       children: [
                         TextSpan(
                           text: "Login Here.",
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
@@ -276,7 +301,7 @@ class _RegistPageState extends State<RegistPage> {
                             ..onTap = () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => LoginPage()),
+                                MaterialPageRoute(builder: (context) => const LoginPage()),
                               );
                             },
                         )

@@ -1,24 +1,29 @@
+// import 'dart:async';
+
+import 'package:dio/dio.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_application_1st/pages/register.dart';
 import 'package:flutter_application_1st/pages/home.dart';
 
-void main() {
-  runApp(const LoginPage());
-}
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State <LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-    final _formKey = GlobalKey<FormState>();
-  TextEditingController _emailanduserController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  static const String _apiUrl = "https://mobileapis.manpits.xyz/api";
+  final _storage = GetStorage();
+  
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailanduserController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
+
 
 
   @override
@@ -27,6 +32,62 @@ class _LoginPageState extends State<LoginPage> {
     _passwordController.dispose();
     super.dispose();
   }
+
+  void goLogin() async {
+  final dio = Dio();
+  try {
+    final response = await dio.post("$_apiUrl/login", data: {
+      "email": _emailanduserController.text,
+      "password": _passwordController.text
+    });
+
+    if (response.statusCode == 200) {
+      // Jika berhasil, lanjutkan ke halaman beranda
+        print(response.data);
+      _storage.write('token', response.data['data']['token']);
+      
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+    } else {
+      // Jika gagal, tampilkan pesan kesalahan
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: const Text('Invalid email/username or password.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  } on DioException catch (e) {
+    // Tangani error jika terjadi
+    print("Error ${e.response?.statusCode} - ${e.response?.data}");
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Error'),
+        content: const Text('Email or password is invalid'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 
   @override
@@ -39,20 +100,20 @@ class _LoginPageState extends State<LoginPage> {
           child: Column( 
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 50 ,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
+                SizedBox(
                   width: 200, 
                   height: 200, 
                   child: Image.asset('lib/images/unicompLogo.png'),
                 ),
               ],
             ),
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('login to',
@@ -70,23 +131,23 @@ class _LoginPageState extends State<LoginPage> {
                 ,)
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-               Container(
+               SizedBox(
                 width: 320,
                 child: TextFormField(
                   controller: _emailanduserController,
                   decoration: InputDecoration(
                     labelText: 'Enter your username or email',
-                    fillColor: Color.fromARGB(255, 241, 241, 241),
+                    fillColor: const Color.fromARGB(255, 241, 241, 241),
                     filled: true,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25),
-                      borderSide:  BorderSide(color: const Color.fromARGB(255, 255, 255, 255), width: 2)
+                      borderSide:  const BorderSide(color: Color.fromARGB(255, 255, 255, 255), width: 2)
                     )
                   ),
                         validator: (value) {
@@ -99,24 +160,24 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-                Container(
+                SizedBox(
                 width: 320,
                 child: TextFormField(
                   controller: _passwordController,
                   obscureText: !_isPasswordVisible, // <-- Use obscureText property
                   decoration: InputDecoration(
                     labelText: 'Enter your password',
-                    fillColor: Color.fromARGB(255, 241, 241, 241),
+                    fillColor: const Color.fromARGB(255, 241, 241, 241),
                     filled: true,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25),
-                      borderSide: BorderSide(color: const Color.fromARGB(255, 255, 255, 255), width: 2)
+                      borderSide: const BorderSide(color: Color.fromARGB(255, 255, 255, 255), width: 2)
                     ),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -142,7 +203,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ],
           ),
-            SizedBox(
+            const SizedBox(
             height: 10,
           ),
           Row(
@@ -151,10 +212,9 @@ class _LoginPageState extends State<LoginPage> {
                 ElevatedButton(
                   onPressed: () {
                      if (_formKey.currentState!.validate()){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                    );
+                      if (_formKey.currentState!.validate()) {    
+                        goLogin();
+                      }
                      }
                   },
                   style: ElevatedButton.styleFrom(
@@ -165,7 +225,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       borderRadius: BorderRadius.circular(25),
                     ),
-                    backgroundColor: Color.fromARGB(191, 18, 159, 253),
+                    backgroundColor: const Color.fromARGB(191, 18, 159, 253),
                   ),
                   child: const Text(
                     'Submit',
@@ -174,7 +234,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ],
             ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Row(
@@ -183,14 +243,14 @@ class _LoginPageState extends State<LoginPage> {
                   RichText(
                     text: TextSpan(
                       text: "Don't have an account yet?, ",
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 14,
                       ),
                       children: [
                         TextSpan(
                           text: "Register Here.",
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
@@ -199,7 +259,7 @@ class _LoginPageState extends State<LoginPage> {
                             ..onTap = () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => RegistPage()),
+                                MaterialPageRoute(builder: (context) => const RegistPage()),
                               );
                             },
                         )
@@ -215,3 +275,4 @@ class _LoginPageState extends State<LoginPage> {
       );
   }
 }
+
