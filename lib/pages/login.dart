@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_application_1st/pages/register.dart';
 import 'package:flutter_application_1st/pages/home.dart';
-
+import 'package:flutter_application_1st/pages/member.dart';
 
 class LoginPage extends StatefulWidget {
    const LoginPage({super.key});
@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void goLogin() async {
+void goLogin() async {
   final dio = Dio();
   try {
     final response = await dio.post("$_apiUrl/login", data: {
@@ -42,14 +42,26 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     if (response.statusCode == 200) {
-      // Jika berhasil, lanjutkan ke halaman beranda
-        print(response.data);
-      _storage.write('token', response.data['data']['token']);
-      
-      Navigator.push(
+      // Jika berhasil, lanjutkan ke halaman beranda dan halaman member
+      print(response.data);
+      final token = response.data['data']['token'];
+      _storage.write('token', token);
+
+      // Meneruskan token ke HomePage dan MemberPage
+      Navigator.pushReplacement( // Gunakan pushReplacement untuk menggantikan LoginPage dengan HomePage
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(
+          builder: (context) => HomePage(token: token), // Mengoper token ke HomePage
+        ),
       );
+
+      // Navigasi ke MemberPage
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => MemberPage(token: token), // Mengoper token ke MemberPage
+      //   ),
+      // );
     } else {
       // Jika gagal, tampilkan pesan kesalahan
       showDialog(
@@ -88,6 +100,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
 
 
   @override
@@ -275,4 +288,3 @@ class _LoginPageState extends State<LoginPage> {
       );
   }
 }
-
