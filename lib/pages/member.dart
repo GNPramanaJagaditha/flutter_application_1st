@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
-import 'package:get_storage/get_storage.dart';
+// import 'package:get_storage/get_storage.dart';
 
 class Member {
   final int? id;
@@ -360,14 +360,14 @@ class _MemberPageState extends State<MemberPage> {
           ),
         ),
         SizedBox(height: 16),
-        ElevatedButton(
-          onPressed: () {
-            // Mengambil anggota yang sedang dipilih untuk diedit
-            final selectedMember = _members.firstWhere((member) => member.nomorInduk == int.parse(_nomorIndukController.text));
-            _editAnggota(selectedMember);
-          },
-          child: Text('Simpan Perubahan'),
-        ),
+        // ElevatedButton(
+        //   onPressed: () {
+        //     // Mengambil anggota yang sedang dipilih untuk diedit
+        //     final selectedMember = _members.firstWhere((member) => member.nomorInduk == int.parse(_nomorIndukController.text));
+        //     _editAnggota(selectedMember);
+        //   },
+        //   child: Text('Simpan Perubahan'),
+        // ),
       ],
     );
   }

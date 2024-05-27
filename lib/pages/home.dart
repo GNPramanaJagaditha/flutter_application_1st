@@ -4,6 +4,7 @@ import 'package:flutter_application_1st/pages/profile.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter_application_1st/pages/login.dart';
 import 'package:flutter_application_1st/pages/member.dart'; // Import halaman "Course Lending"
+import 'package:flutter_application_1st/pages/savings.dart';
 
 class HomePage extends StatefulWidget {
   final String token;
@@ -30,6 +31,13 @@ void _onItemTapped(int index) {
         MaterialPageRoute(builder: (context) => MemberPage(token: widget.token)), // Gunakan widget.token untuk mengambil token
       );
     }
+     else if (index == 2) {
+      // Jika indeks adalah 3 (Course Lending), navigasikan ke halaman "MemberPage"
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SavingsPage(token: widget.token)), // Gunakan widget.token untuk mengambil token
+      );
+     }  
   });
 }
 
@@ -189,11 +197,11 @@ void _onItemTapped(int index) {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.task),
-            label: 'Tasks',
+            label: 'Tasks & Courses',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.book),
-            label: 'Courses',
+            icon: Icon(Icons.money_rounded),
+            label: 'Student Savings',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.handshake),
